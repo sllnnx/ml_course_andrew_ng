@@ -16,8 +16,16 @@ p = zeros(m, 1);
 %
 
 
+p = X*theta;
 
-
+for i = 1:length(p)
+  if sigmoid(p(i)) >= 0.5;
+    p(i) = 1;
+    end
+  if sigmoid(p(i)) < 0.5;
+    p(i) = 0;
+    end
+end
 
 
 
