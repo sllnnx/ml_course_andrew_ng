@@ -21,10 +21,16 @@ p = zeros(size(X, 1), 1);
 %       can use max(A, [], 2) to obtain the max for each row.
 %
 
+% Add a column of ones to the X data matrix (X becomes 5000x401)
+X = [ones(m, 1) X];
 
+% X*Theta1' is of dimensions 5000x25
+a_2 = sigmoid(X*Theta1');
+a_2 = [ones(size(a_2, 1),1) a_2];
+% a_2*Theta2' is of dimensions 5000x10
+h_x = sigmoid(a_2*Theta2');
 
-
-
+[u, p] = max(h_x, [], 2);
 
 
 
