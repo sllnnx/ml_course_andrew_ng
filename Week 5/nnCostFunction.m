@@ -72,6 +72,20 @@ for i = 1:size(y_m,1);
   y_m(i,:) = v; %Matrix 5000x10
 end
 
+a_1 = X; %5000x401
+z_2 = a_1*Theta1'; %5000x25
+a_2 = sigmoid(z_2); %5000x25
+a_2 = [ones(m,1) a_2]; %5000x26
+z_3 = a_2*Theta2'; %5000x10
+a_3 = sigmoid(z_3); %5000x10
+d_3 = a_3 - y_m; %5000x10
+d_2 = d_3 * Theta2(:,2:end) .* sigmoidGradient(z_2); %5000x25
+Theta1_grad = d_2'*a_1; %d2*a1 is 25x401 this is D1
+Theta2_grad = d_3'*a_2; %d3*a2 is 10x26 this is D2
+
+Theta1_grad = Theta1_grad/m + lambda/m * [zeros(size(Theta1,1),1) Theta1(:,2:end)];
+Theta2_grad = Theta2_grad/m + lambda/m * [zeros(size(Theta2,1),1) Theta2(:,2:end)];
+
 for u = 1:m
   a_2 = sigmoid(X(u,:)*Theta1');
   a_2 = [ones(1,1) a_2]; %1x26
@@ -86,22 +100,9 @@ The1_sq = The1_sq.*The1_sq;
 The2_sq = Theta2(:,2:size(Theta2,2));
 The2_sq = The2_sq.*The2_sq;
 
-J = J + lambda/(2*m) * (sum(sum(The1_sq))+sum(sum(The2_sq)));
+J = J + lambda/(2*m) * (sum(sum(The1_sq))+sum(sum(The2_sq))); 
 
 
-a_1 = X'; %401x5000
-z_2 = Theta1*a_1; %25x5000
-a_2 = sigmoid(z_2); %25x5000
-a_2 = [a_2;ones(1,m)]; %26x5000
-z_3 = Theta2*a_2; %10x5000
-a_3 = sigmoid(z_3); %10x5000
-d_3 = a_3 - y_m'; %10x5000
-d_2 = Theta2(:,2:end)' * d_3 .* sigmoidGradient(z_2); %25x5000
-Theta1_grad = d_2*a_1'; %d2*a1 is 25x401 this is D1
-Theta2_grad = d_3*a_2'; %d3*a2 is 10x26 this is D2
-
-Theta1_grad = Theta1_grad/m;
-Theta2_grad = Theta2_grad/m;
 
 
 % -------------------------------------------------------------
